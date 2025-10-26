@@ -52,6 +52,15 @@ class ApiClient {
       console.log('API Response:', response.status, response.statusText);
 
       if (!response.ok) {
+        // Handle token expiration - redirect to login
+        if (response.status === 401) {
+          this.logout();
+          if (typeof window !== 'undefined') {
+            window.location.href = '/';
+          }
+          throw new Error('Session expired. Please login again.');
+        }
+
         let errorMessage = `HTTP error! status: ${response.status}`;
         try {
           const errorData = await response.json();

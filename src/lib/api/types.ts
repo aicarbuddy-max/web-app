@@ -12,7 +12,8 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  username: string;
+  fullName: string;
+  phoneNumber: string;
   email: string;
   password: string;
 }
@@ -20,7 +21,7 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string;
   id: string;
-  username: string;
+  fullName: string;
   email: string;
   role: string;
 }

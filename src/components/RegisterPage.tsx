@@ -14,7 +14,8 @@ interface RegisterPageProps {
 }
 
 export function RegisterPage({ isDarkMode, onSwitchToLogin, onRegisterSuccess }: RegisterPageProps) {
-  const [username, setUsername] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -24,7 +25,7 @@ export function RegisterPage({ isDarkMode, onSwitchToLogin, onRegisterSuccess }:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!username || !email || !password || !confirmPassword) {
+    if (!fullName || !phoneNumber || !email || !password || !confirmPassword) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -41,7 +42,7 @@ export function RegisterPage({ isDarkMode, onSwitchToLogin, onRegisterSuccess }:
 
     setIsLoading(true);
     try {
-      await register(username, email, password);
+      await register(fullName, phoneNumber, email, password);
       toast.success('Registration successful! Please login.');
       onRegisterSuccess();
     } catch (error: any) {
@@ -72,15 +73,29 @@ export function RegisterPage({ isDarkMode, onSwitchToLogin, onRegisterSuccess }:
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username" className={isDarkMode ? 'text-gray-200' : ''}>
-                Username
+              <Label htmlFor="fullName" className={isDarkMode ? 'text-gray-200' : ''}>
+                Full Name
               </Label>
               <Input
-                id="username"
+                id="fullName"
                 type="text"
-                placeholder="Choose a username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter your full name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                disabled={isLoading}
+                className={isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : ''}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phoneNumber" className={isDarkMode ? 'text-gray-200' : ''}>
+                Phone Number
+              </Label>
+              <Input
+                id="phoneNumber"
+                type="tel"
+                placeholder="Enter your phone number"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 disabled={isLoading}
                 className={isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : ''}
               />
