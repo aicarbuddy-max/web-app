@@ -16,13 +16,13 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 function AppContent() {
   const [activeTab, setActiveTab] = useState('garages');
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number; placeName?: string } | null>(null);
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
   const [authView, setAuthView] = useState<'login' | 'register'>('login');
   const { isAuthenticated, isLoading } = useAuth();
 
-  const handleLocationSelect = (latitude: number, longitude: number) => {
-    setCurrentLocation({ latitude, longitude });
+  const handleLocationSelect = (latitude: number, longitude: number, placeName?: string) => {
+    setCurrentLocation({ latitude, longitude, placeName });
   };
 
   if (isLoading) {

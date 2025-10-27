@@ -12,8 +12,8 @@ interface AutoPartsShopWithDistance extends AutoPartsShop {
 
 interface AutoPartShopsPageProps {
   isDarkMode: boolean;
-  currentLocation: { latitude: number; longitude: number } | null;
-  onLocationSelect: (latitude: number, longitude: number) => void;
+  currentLocation: { latitude: number; longitude: number; placeName?: string } | null;
+  onLocationSelect: (latitude: number, longitude: number, placeName?: string) => void;
 }
 
 const autoPartShops = [
@@ -166,25 +166,26 @@ const autoPartShops = [
 export function AutoPartShopsPage({ isDarkMode, currentLocation, onLocationSelect }: AutoPartShopsPageProps) {
   const [shops, setShops] = useState<AutoPartsShopWithDistance[]>([]);
   const [allShops, setAllShops] = useState<AutoPartsShop[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchRadius] = useState(10); // Default 10km radius
 
   useEffect(() => {
-    loadShops();
-  }, []);
-
-  useEffect(() => {
     if (currentLocation) {
-      filterShopsByLocation();
+      loadShops();
     }
-  }, [currentLocation, allShops]);
+  }, [currentLocation]);
 
   const loadShops = async () => {
     try {
       setIsLoading(true);
       const data = await apiClient.getAllAutoPartsShops();
       setAllShops(data);
-      setShops(data);
+
+      if (currentLocation) {
+        filterShopsByLocation(data);
+      } else {
+        setShops(data);
+      }
     } catch (error: any) {
       console.error('Failed to load auto parts shops:', error);
       toast.error('Failed to load auto parts shops');
@@ -208,11 +209,11 @@ export function AutoPartShopsPage({ isDarkMode, currentLocation, onLocationSelec
     return R * c;
   };
 
-  const filterShopsByLocation = () => {
-    if (!currentLocation || allShops.length === 0) return;
+  const filterShopsByLocation = (shopData: AutoPartsShop[]) => {
+    if (!currentLocation || shopData.length === 0) return;
 
     // Calculate distances for all shops
-    const shopsWithDistance = allShops.map((shop) => ({
+    const shopsWithDistance = shopData.map((shop) => ({
       ...shop,
       distanceKm: calculateDistance(currentLocation.latitude, currentLocation.longitude, shop.latitude, shop.longitude),
     }));
@@ -222,11 +223,10 @@ export function AutoPartShopsPage({ isDarkMode, currentLocation, onLocationSelec
       .filter((shop) => shop.distanceKm! <= searchRadius)
       .sort((a, b) => a.distanceKm! - b.distanceKm!);
 
+    setShops(nearbyShops);
     if (nearbyShops.length === 0) {
-      toast.info(`No shops found within ${searchRadius}km. Showing all shops.`);
-      setShops(allShops);
+      toast.info(`No auto parts shops found within ${searchRadius}km of your location.`);
     } else {
-      setShops(nearbyShops);
       toast.success(`Found ${nearbyShops.length} nearby shops`);
     }
   };
@@ -244,14 +244,36 @@ export function AutoPartShopsPage({ isDarkMode, currentLocation, onLocationSelec
         </p>
       </div>
 
-      {isLoading ? (
+      {!currentLocation ? (
+        <div className="text-center py-20">
+          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-4 ${
+            isDarkMode ? 'bg-orange-950/20' : 'bg-orange-100'
+          }`}>
+            <MapPin className={`w-10 h-10 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+          </div>
+          <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            Please Set Your Location
+          </h3>
+          <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            To find nearby auto parts shops, please select your location using the location picker above.
+          </p>
+        </div>
+      ) : isLoading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className={`mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Loading shops...</p>
+          <p className={`mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Searching nearby shops...</p>
         </div>
       ) : shops.length === 0 ? (
         <div className="text-center py-12">
-          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>No auto parts shops found</p>
+          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
+            isDarkMode ? 'bg-gray-800' : 'bg-gray-100'
+          }`}>
+            <Package className={`w-8 h-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+          </div>
+          <p className={`font-medium mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>No auto parts shops found</p>
+          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Try adjusting your location or search radius
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

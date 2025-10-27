@@ -11,8 +11,8 @@ import { LocationPicker } from './LocationPicker';
 interface DesktopNavProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  currentLocation: { latitude: number; longitude: number } | null;
-  onLocationSelect: (latitude: number, longitude: number) => void;
+  currentLocation: { latitude: number; longitude: number; placeName?: string } | null;
+  onLocationSelect: (latitude: number, longitude: number, placeName?: string) => void;
   onAskClick: () => void;
   isDarkMode: boolean;
   setIsDarkMode: (value: boolean) => void;

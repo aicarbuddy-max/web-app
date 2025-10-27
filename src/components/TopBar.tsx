@@ -2,8 +2,8 @@ import { User, Car } from 'lucide-react';
 import { LocationPicker } from './LocationPicker';
 
 interface TopBarProps {
-  currentLocation: { latitude: number; longitude: number } | null;
-  onLocationSelect: (latitude: number, longitude: number) => void;
+  currentLocation: { latitude: number; longitude: number; placeName?: string } | null;
+  onLocationSelect: (latitude: number, longitude: number, placeName?: string) => void;
   onProfileClick: () => void;
   isDarkMode: boolean;
 }

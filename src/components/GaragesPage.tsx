@@ -15,8 +15,8 @@ import type { Garage, GarageWithDistance } from '../lib/api/types';
 import { toast } from 'sonner';
 interface GaragesPageProps {
   isDarkMode: boolean;
-  currentLocation: { latitude: number; longitude: number } | null;
-  onLocationSelect: (latitude: number, longitude: number) => void;
+  currentLocation: { latitude: number; longitude: number; placeName?: string } | null;
+  onLocationSelect: (latitude: number, longitude: number, placeName?: string) => void;
 }
 
 const offerBanners = [
@@ -183,31 +183,14 @@ const garages = [
 
 export function GaragesPage({ isDarkMode, currentLocation, onLocationSelect }: GaragesPageProps) {
   const [garages, setGarages] = useState<(Garage | GarageWithDistance)[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchRadius] = useState(10); // Default 10km radius
-
-  useEffect(() => {
-    loadGarages();
-  }, []);
 
   useEffect(() => {
     if (currentLocation) {
       searchNearbyGarages();
     }
   }, [currentLocation]);
-
-  const loadGarages = async () => {
-    try {
-      setIsLoading(true);
-      const data = await apiClient.getAllGarages();
-      setGarages(data);
-    } catch (error: any) {
-      console.error('Failed to load garages:', error);
-      toast.error('Failed to load garages');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const searchNearbyGarages = async () => {
     if (!currentLocation) return;
@@ -220,18 +203,15 @@ export function GaragesPage({ isDarkMode, currentLocation, onLocationSelect }: G
         radiusKm: searchRadius,
       });
 
+      setGarages(nearbyGarages);
       if (nearbyGarages.length === 0) {
-        toast.info(`No garages found within ${searchRadius}km. Showing all garages.`);
-        await loadGarages();
+        toast.info(`No garages found within ${searchRadius}km of your location.`);
       } else {
-        setGarages(nearbyGarages);
         toast.success(`Found ${nearbyGarages.length} nearby garages`);
       }
     } catch (error: any) {
       console.error('Failed to search nearby garages:', error);
       toast.error('Failed to search nearby garages');
-      // Fallback to all garages
-      await loadGarages();
     } finally {
       setIsLoading(false);
     }
@@ -276,14 +256,36 @@ export function GaragesPage({ isDarkMode, currentLocation, onLocationSelect }: G
           )}
         </div>
 
-        {isLoading ? (
+        {!currentLocation ? (
+          <div className="text-center py-20">
+            <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-4 ${
+              isDarkMode ? 'bg-orange-950/20' : 'bg-orange-100'
+            }`}>
+              <MapPin className={`w-10 h-10 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+            </div>
+            <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+              Please Set Your Location
+            </h3>
+            <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              To find nearby garages, please select your location using the location picker above.
+            </p>
+          </div>
+        ) : isLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-            <p className={`mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Loading garages...</p>
+            <p className={`mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Searching nearby garages...</p>
           </div>
         ) : garages.length === 0 ? (
           <div className="text-center py-12">
-            <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>No garages found</p>
+            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
+              isDarkMode ? 'bg-gray-800' : 'bg-gray-100'
+            }`}>
+              <MapPin className={`w-8 h-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+            </div>
+            <p className={`font-medium mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>No garages found</p>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Try adjusting your location or search radius
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
