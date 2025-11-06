@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { TopBar } from './components/TopBar';
 import { BottomNav } from './components/BottomNav';
 import { DesktopNav } from './components/DesktopNav';
+import { HomePage } from './components/HomePage';
 import { GaragesPage } from './components/GaragesPage';
 import { AutoPartShopsPage } from './components/AutoPartShopsPage';
+import { DetailingShopsPage } from './components/DetailingShopsPage';
 import { CommunityPage } from './components/CommunityPage';
 import { ContactPage } from './components/ContactPage';
 import { ProfilePage } from './components/ProfilePage';
@@ -14,8 +16,8 @@ import { Toaster } from './components/ui/sonner';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState('garages');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState('home');
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number; placeName?: string } | null>(null);
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
   const [authView, setAuthView] = useState<'login' | 'register'>('login');
@@ -27,7 +29,7 @@ function AppContent() {
 
   if (isLoading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-950' : 'bg-gray-50'}`}>
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-[#131313]' : 'bg-gray-50'}`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
           <p className={`mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Loading...</p>
@@ -57,10 +59,14 @@ function AppContent() {
 
   const renderPage = () => {
     switch (activeTab) {
+      case 'home':
+        return <HomePage isDarkMode={isDarkMode} onNavigate={setActiveTab} onAskClick={() => setIsChatBotOpen(true)} />;
       case 'garages':
         return <GaragesPage isDarkMode={isDarkMode} currentLocation={currentLocation} onLocationSelect={handleLocationSelect} />;
       case 'auto-parts':
         return <AutoPartShopsPage isDarkMode={isDarkMode} currentLocation={currentLocation} onLocationSelect={handleLocationSelect} />;
+      case 'detailing':
+        return <DetailingShopsPage isDarkMode={isDarkMode} currentLocation={currentLocation} onLocationSelect={handleLocationSelect} />;
       case 'community':
         return <CommunityPage isDarkMode={isDarkMode} />;
       case 'contact':
@@ -68,12 +74,12 @@ function AppContent() {
       case 'profile':
         return <ProfilePage isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />;
       default:
-        return <GaragesPage isDarkMode={isDarkMode} currentLocation={currentLocation} onLocationSelect={handleLocationSelect} />;
+        return <HomePage isDarkMode={isDarkMode} onNavigate={setActiveTab} onAskClick={() => setIsChatBotOpen(true)} />;
     }
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-950' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'dark bg-[#131313]' : 'bg-gray-50'}`}>
       {/* Desktop Layout */}
       <div className="hidden md:flex flex-col min-h-screen">
         <DesktopNav

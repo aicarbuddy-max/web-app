@@ -10,7 +10,7 @@ interface TopBarProps {
 
 export function TopBar({ currentLocation, onLocationSelect, onProfileClick, isDarkMode }: TopBarProps) {
   return (
-    <div className={`fixed top-0 left-0 right-0 z-40 max-w-md mx-auto ${isDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b`}>
+    <div className={`fixed top-0 left-0 right-0 z-40 max-w-md mx-auto ${isDarkMode ? 'bg-[#1A1A1A] border-gray-800' : 'bg-white border-gray-200'} border-b`}>
       <div className="flex items-center justify-between px-4 py-3">
         {/* Branding */}
         <div className="flex items-center gap-2">

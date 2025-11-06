@@ -1,7 +1,8 @@
 // API Configuration
 export const API_CONFIG = {
-  baseURL: 'https://carbuddy-web-api.azurewebsites.net/api',
-  // baseURL: 'http://localhost:5050/api',
+  baseURL: 'https://car-buddy-web-api.onrender.com/api',
+  // baseURL: 'https://carbuddy-web-api.azurewebsites.net/api', // Azure (deprecated)
+  // baseURL: 'http://localhost:5050/api', // Local development
   timeout: 10000,
 };
 

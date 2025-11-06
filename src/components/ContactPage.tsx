@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
 import { Card } from './ui/card';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -142,6 +142,32 @@ export function ContactPage({ isDarkMode }: ContactPageProps) {
             Send Message
           </Button>
         </form>
+      </Card>
+
+      {/* WhatsApp Contact */}
+      <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700' : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200'}`}>
+        <div className="text-center">
+          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${isDarkMode ? 'bg-green-950' : 'bg-green-100'}`}>
+            <MessageCircle className={`w-8 h-8 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+          </div>
+          <h3 className={`mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            Need Immediate Help?
+          </h3>
+          <p className={`mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Chat with us directly on WhatsApp for faster assistance
+          </p>
+          <a
+            href="https://wa.me/1234567890"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block"
+          >
+            <Button className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white">
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Chat on WhatsApp
+            </Button>
+          </a>
+        </div>
       </Card>
     </div>
   );

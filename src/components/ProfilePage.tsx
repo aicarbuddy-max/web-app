@@ -1,8 +1,9 @@
-import { User, Moon, Sun, Bell, CreditCard, MapPin, LogOut } from 'lucide-react';
+import { User, Moon, Sun, Bell, CreditCard, MapPin, LogOut, Wrench, Package, Sparkles, Clock, Heart } from 'lucide-react';
 import { Card } from './ui/card';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Switch } from './ui/switch';
 import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -27,6 +28,50 @@ export function ProfilePage({ isDarkMode, setIsDarkMode }: ProfilePageProps) {
       .toUpperCase()
       .slice(0, 2);
   };
+
+  // Mock interaction history - in production, this would come from API/database
+  const interactionHistory = [
+    {
+      id: 1,
+      type: 'garage',
+      name: 'AutoCare Pro',
+      action: 'Showed interest',
+      date: '2 hours ago',
+      icon: Wrench,
+      color: 'text-orange-400',
+      bgColor: isDarkMode ? 'bg-orange-950/30' : 'bg-orange-50'
+    },
+    {
+      id: 2,
+      type: 'detailing',
+      name: 'Elite Auto Detailing',
+      action: 'Showed interest',
+      date: '1 day ago',
+      icon: Sparkles,
+      color: 'text-green-400',
+      bgColor: isDarkMode ? 'bg-green-950/30' : 'bg-green-50'
+    },
+    {
+      id: 3,
+      type: 'auto-parts',
+      name: 'Premium Parts Store',
+      action: 'Visited page',
+      date: '2 days ago',
+      icon: Package,
+      color: 'text-purple-400',
+      bgColor: isDarkMode ? 'bg-purple-950/30' : 'bg-purple-50'
+    },
+    {
+      id: 4,
+      type: 'garage',
+      name: 'Quick Fix Garage',
+      action: 'Showed interest',
+      date: '3 days ago',
+      icon: Wrench,
+      color: 'text-orange-400',
+      bgColor: isDarkMode ? 'bg-orange-950/30' : 'bg-orange-50'
+    },
+  ];
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -117,7 +162,7 @@ export function ProfilePage({ isDarkMode, setIsDarkMode }: ProfilePageProps) {
       {/* My Activity */}
       <div>
         <h3 className={`mb-3 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>My Activity</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Card className={`p-4 ${isDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} cursor-pointer hover:bg-opacity-80 transition-colors`}>
             <p className={isDarkMode ? 'text-gray-100' : 'text-gray-900'}>Service History</p>
@@ -133,6 +178,59 @@ export function ProfilePage({ isDarkMode, setIsDarkMode }: ProfilePageProps) {
             </p>
           </Card>
         </div>
+      </div>
+
+      {/* Interaction History */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className={isDarkMode ? 'text-gray-100' : 'text-gray-900'}>Recent Activity</h3>
+          <Badge variant="outline" className={isDarkMode ? 'border-gray-700 text-gray-400' : ''}>
+            {interactionHistory.length} items
+          </Badge>
+        </div>
+
+        <Card className={`p-4 ${isDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
+          <div className="space-y-3">
+            {interactionHistory.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg ${item.bgColor} transition-colors hover:opacity-80`}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                    <Icon className={`w-5 h-5 ${item.color}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-medium truncate ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                      {item.name}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {item.action}
+                      </p>
+                      <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>•</span>
+                      <div className="flex items-center gap-1">
+                        <Clock className={`w-3 h-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`} />
+                        <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                          {item.date}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <Heart className={`w-5 h-5 ${item.action === 'Showed interest' ? 'fill-current text-red-500' : isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} />
+                </div>
+              );
+            })}
+          </div>
+
+          <Button
+            variant="ghost"
+            className={`w-full mt-3 ${isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-600 hover:text-gray-900'}`}
+          >
+            View All Activity
+          </Button>
+        </Card>
       </div>
 
       {/* Logout */}

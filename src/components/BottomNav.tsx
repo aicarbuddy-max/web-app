@@ -1,4 +1,4 @@
-import { Wrench, Package, MessageCircleQuestion, Users, Mail } from 'lucide-react';
+import { Wrench, Package, MessageCircleQuestion, Users, Home } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -9,15 +9,15 @@ interface BottomNavProps {
 
 export function BottomNav({ activeTab, setActiveTab, onAskClick, isDarkMode }: BottomNavProps) {
   const navItems = [
+    { id: 'home', icon: Home, label: 'Home' },
     { id: 'garages', icon: Wrench, label: 'Garages' },
-    { id: 'auto-parts', icon: Package, label: 'Auto Parts' },
     { id: 'ask', icon: MessageCircleQuestion, label: 'ASK', isCenter: true },
+    { id: 'auto-parts', icon: Package, label: 'Parts' },
     { id: 'community', icon: Users, label: 'Community' },
-    { id: 'contact', icon: Mail, label: 'Contact' },
   ];
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto ${isDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-t`}>
+    <div className={`fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto ${isDarkMode ? 'bg-[#1A1A1A] border-gray-800' : 'bg-white border-gray-200'} border-t`}>
       <div className="flex items-center justify-around px-2 py-2">
         {navItems.map((item) => {
           const Icon = item.icon;

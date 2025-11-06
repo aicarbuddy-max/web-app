@@ -1,4 +1,4 @@
-import { Wrench, Package, MessageCircleQuestion, Users, Mail, User, Moon, Sun, Car } from 'lucide-react';
+import { Wrench, Package, MessageCircleQuestion, Users, Mail, User, Moon, Sun, Car, Home, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
 import {
@@ -29,14 +29,16 @@ export function DesktopNav({
 }: DesktopNavProps) {
   
   const navItems = [
+    { id: 'home', icon: Home, label: 'Home' },
     { id: 'garages', icon: Wrench, label: 'Garages' },
     { id: 'auto-parts', icon: Package, label: 'Auto Parts' },
+    { id: 'detailing', icon: Sparkles, label: 'Detailing' },
     { id: 'community', icon: Users, label: 'Community' },
     { id: 'contact', icon: Mail, label: 'Contact' },
   ];
 
   return (
-    <div className={`fixed top-0 left-0 right-0 z-40 ${isDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b`}>
+    <div className={`fixed top-0 left-0 right-0 z-40 ${isDarkMode ? 'bg-[#1A1A1A] border-gray-800' : 'bg-white border-gray-200'} border-b`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo and Brand */}
